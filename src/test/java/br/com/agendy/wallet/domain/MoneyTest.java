@@ -32,6 +32,12 @@ public class MoneyTest {
   }
 
   @Test
+  void zera_o_valor() {
+    Money r = Money.of(new BigDecimal("10.00")).subtract(Money.of(new BigDecimal("10.00")));
+    assertThat(r.amount()).isEqualByComparingTo(BigDecimal.ZERO);
+  }
+
+  @Test
   void subtrai_dois_valores() {
     Money r = Money.of(new BigDecimal("10.00")).subtract(Money.of(new BigDecimal("4.00")));
     assertThat(r.amount()).isEqualByComparingTo("6.00");
