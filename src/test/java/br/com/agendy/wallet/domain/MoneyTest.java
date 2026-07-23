@@ -30,4 +30,16 @@ public class MoneyTest {
     Money r = Money.of(new BigDecimal("10.00")).add(Money.of(new BigDecimal("5.50")));
       assertThat(r.amount()).isEqualByComparingTo("15.50");
   }
+
+  @Test
+  void subtrai_dois_valores() {
+    Money r = Money.of(new BigDecimal("10.00")).subtract(Money.of(new BigDecimal("4.00")));
+    assertThat(r.amount()).isEqualByComparingTo("6.00");
+  }
+
+  @Test
+  void subtrai_alem_do_valor_viola_a_invariante() {
+    assertThatThrownBy(() -> Money.of(new BigDecimal("10.00")).subtract(Money.of(new BigDecimal("15.00"))))
+      .isInstanceOf(IllegalArgumentException.class);
+  }
 }
