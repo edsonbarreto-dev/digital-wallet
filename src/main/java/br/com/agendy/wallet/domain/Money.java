@@ -17,8 +17,11 @@ public record Money(BigDecimal amount) {
     return new Money(amount);
   }
 
-  // soma
   public Money add(Money other) {
     return new Money(amount.add(other.amount));
+  }
+
+  public Money subtract(Money other) {
+    return new Money(amount.subtract(other.amount));
   }
 }
