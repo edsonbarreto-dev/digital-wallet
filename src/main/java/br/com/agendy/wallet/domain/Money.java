@@ -24,4 +24,8 @@ public record Money(BigDecimal amount) {
   public Money subtract(Money other) {
     return new Money(amount.subtract(other.amount));
   }
+
+  public boolean isZero() {
+    return amount.signum() == 0;
+  }
 }
