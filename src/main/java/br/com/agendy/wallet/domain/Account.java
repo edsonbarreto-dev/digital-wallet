@@ -17,4 +17,8 @@ public class Account {
   public Money balance() {
     return balance;
   }
+
+  public void deposit(Money money) {
+    this.balance = this.balance.add(money);
+  }
 }
