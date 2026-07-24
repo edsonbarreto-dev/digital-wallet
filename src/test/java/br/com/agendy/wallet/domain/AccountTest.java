@@ -20,4 +20,11 @@ public class AccountTest {
     conta.deposit(Money.of(new BigDecimal("10.00")));
     assertThat(conta.balance()).isEqualTo(Money.of(new BigDecimal("10.00")));
   }
+
+  @Test
+  void deposito_de_valor_zero_deve_falhar() {
+    Account conta = Account.open();
+    assertThatIllegalArgumentException()
+      .isThrownBy(() -> conta.deposit(Money.of(BigDecimal.ZERO)));
+  }
 }
