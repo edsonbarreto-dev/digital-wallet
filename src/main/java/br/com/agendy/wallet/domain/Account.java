@@ -19,6 +19,8 @@ public class Account {
   }
 
   public void deposit(Money money) {
-    this.balance = this.balance.add(money);
+    if (balance.isZero()) {
+      throw new IllegalArgumentException("Depósito deve ser maior que zero");
+    }
   }
 }
