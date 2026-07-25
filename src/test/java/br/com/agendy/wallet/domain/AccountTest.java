@@ -105,4 +105,35 @@ public class AccountTest {
     assertThatExceptionOfType(UnsupportedOperationException.class)
       .isThrownBy(() -> historico.add(new Transaction(TransactionType.DEPOSIT, Money.of(new BigDecimal("999.00")))));
   }
+
+  @Test
+  void deposito_publica_evento_MoneyDeposited() {
+    Account conta = Account.open();
+    conta.deposit(Money.of(new BigDecimal("100.00")));
+
+    assertThat(conta.domainEvents()).hasSize(1);
+    assertThat(conta.domainEvents().get(0))
+      .isInstanceOfSatisfying(MoneyDeposited.class,
+        e -> assertThat(e.amount()).isEqualTo(Money.of(new BigDecimal("100.00"))));
+  }
+
+  @Test
+  void saque_publica_evento_MoneyWithdrawn() {
+    Account conta = Account.open();
+    conta.deposit(Money.of(new BigDecimal("100.00")));
+    conta.withdraw(Money.of(new BigDecimal("30.00")));
+
+    assertThat(conta.domainEvents()).hasSize(2);
+    assertThat(conta.domainEvents().get(1)).isInstanceOf(MoneyWithdrawn.class);
+  }
+
+  @Test
+  void operacao_rejeitada_nao_publica_evento() {
+    Account conta = Account.open();
+
+    assertThatIllegalArgumentException()
+      .isThrownBy(() -> conta.deposit(Money.of(BigDecimal.ZERO)));
+
+    assertThat(conta.domainEvents()).isEmpty();
+  }
 }
