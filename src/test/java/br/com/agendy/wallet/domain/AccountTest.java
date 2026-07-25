@@ -27,4 +27,14 @@ public class AccountTest {
     assertThatIllegalArgumentException()
       .isThrownBy(() -> conta.deposit(Money.of(BigDecimal.ZERO)));
   }
+
+  @Test
+  void saque_diminui_o_saldo() {
+    Account conta = Account.open();
+    conta.deposit(Money.of(new BigDecimal("100.00")));
+
+    conta.withdraw(Money.of(new BigDecimal("30.00")));
+
+    assertThat(conta.balance()).isEqualTo(Money.of(new BigDecimal("70.00")));
+  }
 }
