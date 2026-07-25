@@ -55,4 +55,32 @@ public class AccountTest {
     assertThatIllegalArgumentException()
       .isThrownBy(() -> conta.withdraw(Money.of(BigDecimal.ZERO)));
   }
+
+  @Test
+  void nova_conta_nao_tem_transacoes() {
+    assertThat(Account.open().transactions()).isEmpty();
+  }
+
+  @Test
+  void deposito_registra_uma_transacao() {
+    Account conta = Account.open();
+    conta.deposit(Money.of(new BigDecimal("100.00")));
+
+    assertThat(conta.transactions()).hasSize(1);
+    Transaction t = conta.transactions().get(0);
+    assertThat(t.type()).isEqualTo(TransactionType.DEPOSIT);
+    assertThat(t.amount()).isEqualTo(Money.of(new BigDecimal("100.00")));
+  }
+
+  @Test
+  void saque_registra_uma_transacao() {
+    Account conta = Account.open();
+    conta.deposit(Money.of(new BigDecimal("100.00")));
+    conta.withdraw(Money.of(new BigDecimal("40.00")));
+
+    assertThat(conta.transactions()).hasSize(2);           // depósito + saque
+    Transaction ultima = conta.transactions().get(1);
+    assertThat(ultima.type()).isEqualTo(TransactionType.WITHDRAW);
+    assertThat(ultima.amount()).isEqualTo(Money.of(new BigDecimal("40.00")));
+  }
 }
