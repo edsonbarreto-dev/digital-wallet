@@ -3,6 +3,7 @@ package br.com.agendy.wallet.domain;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -78,9 +79,30 @@ public class AccountTest {
     conta.deposit(Money.of(new BigDecimal("100.00")));
     conta.withdraw(Money.of(new BigDecimal("40.00")));
 
-    assertThat(conta.transactions()).hasSize(2);           // depósito + saque
+    assertThat(conta.transactions()).hasSize(2);
     Transaction ultima = conta.transactions().get(1);
     assertThat(ultima.type()).isEqualTo(TransactionType.WITHDRAW);
     assertThat(ultima.amount()).isEqualTo(Money.of(new BigDecimal("40.00")));
+  }
+
+  @Test
+  void operacao_rejeitada_nao_registra_transacao() {
+    Account conta = Account.open();
+    conta.deposit(Money.of(new BigDecimal("50.00")));
+
+    assertThatExceptionOfType(InsufficientFundsException.class)
+      .isThrownBy(() -> conta.withdraw(Money.of(new BigDecimal("100.00"))));
+
+    assertThat(conta.transactions()).hasSize(1);
+  }
+
+  @Test
+  void historico_exposto_nao_pode_ser_alterado_por_fora() {
+    Account conta = Account.open();
+    conta.deposit(Money.of(new BigDecimal("10.00")));
+
+    List<Transaction> historico = conta.transactions();
+    assertThatExceptionOfType(UnsupportedOperationException.class)
+      .isThrownBy(() -> historico.add(new Transaction(TransactionType.DEPOSIT, Money.of(new BigDecimal("999.00")))));
   }
 }
