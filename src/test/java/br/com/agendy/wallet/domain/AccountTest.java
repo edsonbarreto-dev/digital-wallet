@@ -37,4 +37,22 @@ public class AccountTest {
 
     assertThat(conta.balance()).isEqualTo(Money.of(new BigDecimal("70.00")));
   }
+
+  @Test
+  void saque_maior_que_o_saldo_deve_falhar() {
+    Account conta = Account.open();
+    conta.deposit(Money.of(new BigDecimal("50.00")));
+
+    assertThatExceptionOfType(InsufficientFundsException.class)
+      .isThrownBy(() -> conta.withdraw(Money.of(new BigDecimal("50.01"))));
+  }
+
+  @Test
+  void saque_de_valor_zero_deve_falhar() {
+    Account conta = Account.open();
+    conta.deposit(Money.of(new BigDecimal("100.00")));
+
+    assertThatIllegalArgumentException()
+      .isThrownBy(() -> conta.withdraw(Money.of(BigDecimal.ZERO)));
+  }
 }
