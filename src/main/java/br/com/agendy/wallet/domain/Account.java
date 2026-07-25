@@ -18,9 +18,20 @@ public class Account {
     return balance;
   }
 
-  public void deposit(Money money) {
-    if (balance.isZero()) {
+  public void deposit(Money amount) {
+    if (amount.isZero()) {
       throw new IllegalArgumentException("Depósito deve ser maior que zero");
     }
+    balance = balance.add(amount);
+  }
+
+  public void withdraw(Money amount) {
+    if (amount.isZero()) {
+      throw new IllegalArgumentException("Saque deve ser maior que zero");
+    }
+    if (amount.isGreaterThan(this.balance)) {
+      throw new InsufficientFundsException("Saldo insuficiente para saque");
+    }
+    this.balance = this.balance.subtract(amount);
   }
 }

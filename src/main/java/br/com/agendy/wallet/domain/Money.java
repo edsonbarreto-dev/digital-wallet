@@ -28,4 +28,8 @@ public record Money(BigDecimal amount) {
   public boolean isZero() {
     return amount.signum() == 0;
   }
+
+  public boolean isGreaterThan(Money other) {
+    return this.amount.compareTo(other.amount) > 0;
+  }
 }
