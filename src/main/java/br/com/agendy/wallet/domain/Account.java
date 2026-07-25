@@ -8,6 +8,7 @@ public class Account {
 
   private Money balance;
   private final List<Transaction> transactions = new ArrayList<>();
+  private final List<DomainEvent> domainEvents = new ArrayList<>();
 
   private Account() {
     this.balance = Money.of(BigDecimal.ZERO);
@@ -25,12 +26,17 @@ public class Account {
     return List.copyOf(transactions);
   }
 
+  public List<DomainEvent> domainEvents() {          // ← novo: cópia imutável, mesmo cuidado de encapsulamento
+    return List.copyOf(domainEvents);
+  }
+
   public void deposit(Money amount) {
     if (amount.isZero()) {
       throw new IllegalArgumentException("Depósito deve ser maior que zero");
     }
     balance = balance.add(amount);
     this.transactions.add(new Transaction(TransactionType.DEPOSIT, amount));
+    this.domainEvents.add(new MoneyDeposited(amount));
   }
 
   public void withdraw(Money amount) {
@@ -42,5 +48,6 @@ public class Account {
     }
     this.balance = this.balance.subtract(amount);
     this.transactions.add(new Transaction(TransactionType.WITHDRAW, amount));
+    this.domainEvents.add(new MoneyWithdrawn(amount));
   }
 }
