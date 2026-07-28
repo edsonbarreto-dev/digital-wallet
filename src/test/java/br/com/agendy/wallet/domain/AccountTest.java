@@ -45,6 +45,13 @@ public class AccountTest {
   }
 
   @Test
+  void conta_reconstituida_carrega_a_versao() {
+    Account conta = Account.restore(UUID.randomUUID(), Money.of(new BigDecimal("100.00")), 3L);
+
+    assertThat(conta.version()).isEqualTo(3L);
+  }
+
+  @Test
   void deposito_aumenta_o_saldo() {
     Account conta = Account.open();
     conta.deposit(Money.of(new BigDecimal("10.00")));

@@ -9,6 +9,7 @@ public class Account {
 
   private final UUID id;
   private Money balance;
+  private Long version;
   private final List<Transaction> transactions = new ArrayList<>();
   private final List<DomainEvent> domainEvents = new ArrayList<>();
 
@@ -25,8 +26,16 @@ public class Account {
     return new Account(id, balance);
   }
 
+  public static Account restore(UUID id, Money balance, Long version) {
+    return restore(id, balance);
+  }
+
   public UUID id() {
     return id;
+  }
+
+  public Long version() {
+    return version;
   }
 
   public Money balance() {
