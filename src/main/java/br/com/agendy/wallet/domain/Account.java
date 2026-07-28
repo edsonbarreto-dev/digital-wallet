@@ -9,25 +9,26 @@ public class Account {
 
   private final UUID id;
   private Money balance;
-  private Long version;
+  private final Long version;
   private final List<Transaction> transactions = new ArrayList<>();
   private final List<DomainEvent> domainEvents = new ArrayList<>();
 
-  private Account(UUID id, Money balance) {
+  private Account(UUID id, Money balance, Long version) {
     this.id = id;
     this.balance = balance;
+    this.version = version;
   }
 
   public static Account open() {
-    return new Account(UUID.randomUUID(), Money.of(BigDecimal.ZERO));
+    return new Account(UUID.randomUUID(), Money.of(BigDecimal.ZERO), null);
   }
 
   public static Account restore(UUID id, Money balance) {
-    return new Account(id, balance);
+    return new Account(id, balance, null);
   }
 
   public static Account restore(UUID id, Money balance, Long version) {
-    return restore(id, balance);
+    return new Account(id, balance, version);
   }
 
   public UUID id() {
