@@ -7,11 +7,13 @@ import java.util.UUID;
 
 public class Account {
 
+  private final UUID id;
   private Money balance;
   private final List<Transaction> transactions = new ArrayList<>();
   private final List<DomainEvent> domainEvents = new ArrayList<>();
 
   private Account() {
+    this.id = UUID.randomUUID();
     this.balance = Money.of(BigDecimal.ZERO);
   }
 
@@ -20,7 +22,7 @@ public class Account {
   }
 
   public UUID id() {
-    return null; // stub mínimo — TDD red (ainda não gera identidade)
+    return id;
   }
 
   public Money balance() {
