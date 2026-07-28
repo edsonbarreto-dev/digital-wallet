@@ -3,6 +3,7 @@ package br.com.agendy.wallet.domain;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Account {
 
@@ -16,6 +17,10 @@ public class Account {
 
   public static Account open() {
     return new Account();
+  }
+
+  public UUID id() {
+    return null; // stub mínimo — TDD red (ainda não gera identidade)
   }
 
   public Money balance() {

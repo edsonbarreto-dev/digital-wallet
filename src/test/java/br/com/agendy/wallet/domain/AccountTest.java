@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -13,6 +14,18 @@ public class AccountTest {
   void nova_conta_comeca_com_saldo_zero() {
     Account conta = Account.open();
     assertThat(conta.balance().amount()).isEqualByComparingTo(BigDecimal.ZERO);
+  }
+
+  @Test
+  void nova_conta_nasce_com_identidade() {
+    assertThat(Account.open().id()).isNotNull();
+  }
+
+  @Test
+  void contas_diferentes_tem_identidades_diferentes() {
+    UUID id1 = Account.open().id();
+    UUID id2 = Account.open().id();
+    assertThat(id1).isNotEqualTo(id2);
   }
 
   @Test
