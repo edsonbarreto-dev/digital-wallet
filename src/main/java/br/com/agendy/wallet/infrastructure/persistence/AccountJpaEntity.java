@@ -18,12 +18,19 @@ class AccountJpaEntity {
   @Column(nullable = false, precision = 19, scale = 2)
   private BigDecimal balance;
 
+  private Long version;
+
   protected AccountJpaEntity() {
   }
 
   AccountJpaEntity(UUID id, BigDecimal balance) {
+    this(id, balance, null);
+  }
+
+  AccountJpaEntity(UUID id, BigDecimal balance, Long version) {
     this.id = id;
     this.balance = balance;
+    this.version = version;
   }
 
   UUID getId() {
@@ -32,5 +39,9 @@ class AccountJpaEntity {
 
   BigDecimal getBalance() {
     return balance;
+  }
+
+  Long getVersion() {
+    return version;
   }
 }

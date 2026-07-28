@@ -43,4 +43,22 @@ class AccountMapperTest {
     assertThat(resultado.id()).isEqualTo(original.id());
     assertThat(resultado.balance()).isEqualTo(Money.of(new BigDecimal("42.50")));
   }
+
+  @Test
+  void carrega_a_versao_do_agregado_para_a_entidade() {
+    Account conta = Account.restore(UUID.randomUUID(), Money.of(new BigDecimal("100.00")), 7L);
+
+    AccountJpaEntity entity = AccountMapper.toEntity(conta);
+
+    assertThat(entity.getVersion()).isEqualTo(7L);
+  }
+
+  @Test
+  void carrega_a_versao_da_entidade_para_o_agregado() {
+    AccountJpaEntity entity = new AccountJpaEntity(UUID.randomUUID(), new BigDecimal("70.00"), 5L);
+
+    Account conta = AccountMapper.toDomain(entity);
+
+    assertThat(conta.version()).isEqualTo(5L);
+  }
 }
