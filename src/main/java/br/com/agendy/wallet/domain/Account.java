@@ -21,6 +21,10 @@ public class Account {
     return new Account();
   }
 
+  public static Account restore(UUID id, Money balance) {
+    return open();
+  }
+
   public UUID id() {
     return id;
   }

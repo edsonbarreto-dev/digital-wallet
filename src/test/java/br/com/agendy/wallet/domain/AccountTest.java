@@ -29,6 +29,22 @@ public class AccountTest {
   }
 
   @Test
+  void conta_reconstituida_preserva_id_e_saldo() {
+    UUID id = UUID.randomUUID();
+    Account conta = Account.restore(id, Money.of(new BigDecimal("150.00")));
+
+    assertThat(conta.id()).isEqualTo(id);
+    assertThat(conta.balance()).isEqualTo(Money.of(new BigDecimal("150.00")));
+  }
+
+  @Test
+  void conta_reconstituida_nao_emite_eventos() {
+    Account conta = Account.restore(UUID.randomUUID(), Money.of(new BigDecimal("150.00")));
+
+    assertThat(conta.domainEvents()).isEmpty();
+  }
+
+  @Test
   void deposito_aumenta_o_saldo() {
     Account conta = Account.open();
     conta.deposit(Money.of(new BigDecimal("10.00")));
