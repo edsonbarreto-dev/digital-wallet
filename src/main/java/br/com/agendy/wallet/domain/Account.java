@@ -12,17 +12,17 @@ public class Account {
   private final List<Transaction> transactions = new ArrayList<>();
   private final List<DomainEvent> domainEvents = new ArrayList<>();
 
-  private Account() {
-    this.id = UUID.randomUUID();
-    this.balance = Money.of(BigDecimal.ZERO);
+  private Account(UUID id, Money balance) {
+    this.id = id;
+    this.balance = balance;
   }
 
   public static Account open() {
-    return new Account();
+    return new Account(UUID.randomUUID(), Money.of(BigDecimal.ZERO));
   }
 
   public static Account restore(UUID id, Money balance) {
-    return open();
+    return new Account(id, balance);
   }
 
   public UUID id() {
