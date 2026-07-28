@@ -18,11 +18,12 @@ class AccountPersistenceAdapter implements AccountRepository {
 
   @Override
   public Account save(Account account) {
-    throw new UnsupportedOperationException();
+    AccountJpaEntity saved = jpa.save(AccountMapper.toEntity(account));
+    return AccountMapper.toDomain(saved);
   }
 
   @Override
   public Optional<Account> findById(UUID id) {
-    throw new UnsupportedOperationException();
+    return jpa.findById(id).map(AccountMapper::toDomain);
   }
 }
