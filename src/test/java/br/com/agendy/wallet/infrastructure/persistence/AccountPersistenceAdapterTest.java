@@ -5,6 +5,7 @@ import br.com.agendy.wallet.domain.Money;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
@@ -40,5 +41,23 @@ class AccountPersistenceAdapterTest {
   @Test
   void conta_inexistente_retorna_vazio() {
     assertThat(adapter.findById(UUID.randomUUID())).isEmpty();
+  }
+
+  @Test
+  void escrita_com_versao_desatualizada_deve_falhar() {
+    Account conta = Account.open();
+    adapter.save(conta);
+    UUID id = conta.id();
+
+    Account copia1 = adapter.findById(id).orElseThrow();
+    Account copia2 = adapter.findById(id).orElseThrow();
+
+    copia1.deposit(Money.of(new BigDecimal("100.00")));
+    adapter.save(copia1);
+
+    copia2.deposit(Money.of(new BigDecimal("50.00")));
+
+    assertThatThrownBy(() -> adapter.save(copia2))
+      .isInstanceOf(OptimisticLockingFailureException.class);
   }
 }
