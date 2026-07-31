@@ -17,6 +17,6 @@ public class OpenAccountService {
   }
 
   public Account open() {
-    throw new UnsupportedOperationException("stub — TDD red do R4");
+    return accounts.save(Account.open());
   }
 }
