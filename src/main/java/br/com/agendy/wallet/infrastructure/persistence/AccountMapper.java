@@ -9,10 +9,10 @@ final class AccountMapper {
   }
 
   static AccountJpaEntity toEntity(Account account) {
-    return new AccountJpaEntity(account.id(), account.balance().amount());
+    return new AccountJpaEntity(account.id(), account.balance().amount(), account.version());
   }
 
   static Account toDomain(AccountJpaEntity entity) {
-    return Account.restore(entity.getId(), Money.of(entity.getBalance()));
+    return Account.restore(entity.getId(), Money.of(entity.getBalance()), entity.getVersion());
   }
 }
