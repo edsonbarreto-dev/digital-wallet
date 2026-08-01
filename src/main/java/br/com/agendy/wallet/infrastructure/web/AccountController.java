@@ -35,6 +35,7 @@ class AccountController {
 
   @PostMapping("/{id}/deposits")
   ResponseEntity<AccountResponse> deposit(@PathVariable UUID id, @RequestBody DepositRequest request) {
-    throw new UnsupportedOperationException("stub — TDD red do depósito");
+    Account account = deposit.deposit(id, request.amount());
+    return ResponseEntity.ok(AccountResponse.from(account));
   }
 }
