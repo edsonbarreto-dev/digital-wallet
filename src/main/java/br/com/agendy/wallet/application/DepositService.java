@@ -1,6 +1,7 @@
 package br.com.agendy.wallet.application;
 
 import br.com.agendy.wallet.domain.Account;
+import br.com.agendy.wallet.domain.Money;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -18,6 +19,8 @@ public class DepositService {
   }
 
   public Account deposit(UUID accountId, BigDecimal amount) {
-    throw new UnsupportedOperationException("stub — TDD red do depósito");
+    Account account = accounts.findById(accountId).orElseThrow();
+    account.deposit(Money.of(amount));
+    return accounts.save(account);
   }
 }
