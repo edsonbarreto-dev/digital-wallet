@@ -1,6 +1,7 @@
 package br.com.agendy.wallet.infrastructure;
 
 import br.com.agendy.wallet.application.AccountRepository;
+import br.com.agendy.wallet.application.DepositService;
 import br.com.agendy.wallet.application.OpenAccountService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,5 +16,10 @@ class WalletBeansConfiguration {
   @Bean
   OpenAccountService openAccountService(AccountRepository accounts) {
     return new OpenAccountService(accounts);
+  }
+
+  @Bean
+  DepositService depositService(AccountRepository accounts) {
+    return new DepositService(accounts);
   }
 }
