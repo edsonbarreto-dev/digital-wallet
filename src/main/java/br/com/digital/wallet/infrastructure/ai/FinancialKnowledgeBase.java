@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -88,15 +89,39 @@ class FinancialKnowledgeBase {
         Set<String> palavras = tokenizar(texto);
         int score = 0;
         for (String termo : termos) {
-            if (palavras.contains(termo)) {
-                score++;
+            for (String palavra : palavras) {
+                if (casa(termo, palavra)) {
+                    score++;
+                    break;
+                }
             }
         }
         return score;
     }
 
+    /**
+     * Dois termos casam se são iguais ou compartilham um prefixo de ao menos 5 letras.
+     * Cobre variações morfológicas do português (diversificar/diversificação,
+     * investimento/investimentos) sem precisar de um stemmer completo.
+     */
+    private static boolean casa(String a, String b) {
+        if (a.equals(b)) {
+            return true;
+        }
+        int n = Math.min(a.length(), b.length());
+        int i = 0;
+        while (i < n && a.charAt(i) == b.charAt(i)) {
+            i++;
+        }
+        return i >= 5;
+    }
+
     private static Set<String> tokenizar(String texto) {
-        return Arrays.stream(texto.toLowerCase()
+        // remove acentos (NFD + tira os diacríticos) para a busca ser insensível a acento:
+        // "diversificação" e "diversificacao" viram o mesmo termo.
+        String semAcento = Normalizer.normalize(texto.toLowerCase(), Normalizer.Form.NFD)
+                .replaceAll("\\p{M}+", "");
+        return Arrays.stream(semAcento
                         .replaceAll("[^\\p{L}\\p{Nd}\\s]", " ")
                         .split("\\s+"))
                 .filter(p -> p.length() >= 2 && !STOPWORDS.contains(p))

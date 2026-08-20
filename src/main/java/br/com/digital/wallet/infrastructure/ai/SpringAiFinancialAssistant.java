@@ -50,16 +50,16 @@ class SpringAiFinancialAssistant implements FinancialAssistant {
                 .map(t -> "[" + t.fonte() + "]\n" + t.texto())
                 .collect(Collectors.joining("\n\n---\n\n"));
 
+        String mensagem = """
+                TRECHOS (material de educação financeira):
+                %s
+
+                PERGUNTA: %s
+                """.formatted(contexto.isBlank() ? "(vazio)" : contexto, question);
+
         String resposta = chatClient.prompt()
                 .system(SISTEMA)
-                .user(u -> u.text("""
-                        TRECHOS (material de educação financeira):
-                        {contexto}
-
-                        PERGUNTA: {pergunta}
-                        """)
-                        .param("contexto", contexto.isBlank() ? "(vazio)" : contexto)
-                        .param("pergunta", question))
+                .user(mensagem)
                 .call()
                 .content();
 
