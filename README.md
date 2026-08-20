@@ -48,7 +48,7 @@ infrastructure  ── wires everything (Spring config) ──┘
 ```
 
 ```
-br.com.agendy.wallet
+br.com.digital.wallet
 ├── domain/          Entities & Value Objects (Money, Account), invariants, domain events
 ├── application/     Use cases + ports (repository interfaces)
 ├── adapter/

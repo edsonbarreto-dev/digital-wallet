@@ -1,3 +1,12 @@
 spring:
   application:
     name: Digital Wallet
+  ai:
+    google:
+      genai:
+        # Free tier (Gemini Developer API): informe SOMENTE a api-key.
+        # NAO configure project-id nem location — isso forca o modo Vertex AI (pago).
+        api-key: ${GEMINI_API_KEY}
+        chat:
+          model: gemini-2.5-flash
+          temperature: 0.2

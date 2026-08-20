@@ -1,7 +1,9 @@
 package br.com.digital.wallet.infrastructure;
 
 import br.com.digital.wallet.application.AccountRepository;
+import br.com.digital.wallet.application.AskFinancialQuestionService;
 import br.com.digital.wallet.application.DepositService;
+import br.com.digital.wallet.application.FinancialAssistant;
 import br.com.digital.wallet.application.OpenAccountService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,5 +23,10 @@ class WalletBeansConfiguration {
   @Bean
   DepositService depositService(AccountRepository accounts) {
     return new DepositService(accounts);
+  }
+
+  @Bean
+  AskFinancialQuestionService askFinancialQuestionService(FinancialAssistant assistant) {
+    return new AskFinancialQuestionService(assistant);
   }
 }
