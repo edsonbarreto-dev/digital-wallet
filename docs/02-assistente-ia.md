@@ -16,9 +16,8 @@ responde dúvidas com base em uma base de conhecimento curada, usando **RAG**
 ## Arquitetura da feature
 - `application/FinancialAssistant` — porta de saída (interface).
 - `application/AskFinancialQuestionService` — caso de uso (POJO, montado no `WalletBeansConfiguration`).
-- `infrastructure/ai/SpringAiFinancialAssistant` — adaptador: retrieval + geração + guardrails.
-- `infrastructure/ai/FinancialKnowledgeLoader` — indexa `resources/educacao/*.md` ao subir.
-- `infrastructure/ai/AiConfiguration` — bean do banco vetorial (em memória).
+- `infrastructure/ai/SpringAiFinancialAssistant` — adaptador: recuperação + geração + guardrails.
+- `infrastructure/ai/FinancialKnowledgeBase` — carrega `resources/educacao/*.md` ao subir e faz a recuperação léxica.
 - `infrastructure/web/AssistantController` — `POST /assistant/perguntar`.
 
 ## Como rodar (local, sem infra externa)
@@ -35,7 +34,7 @@ export GEMINI_API_KEY="sua-chave"
 ```bash
 SPRING_PROFILES_ACTIVE=dev mvn spring-boot:run
 ```
-Nos logs você verá a ingestão: `Indexado: renda-fixa-vs-variavel.md (N trechos)`.
+Nos logs você verá o carregamento: `Base de educacao financeira carregada: 3 arquivos, N trechos.`.
 
 ### 3. Teste
 ```bash
@@ -51,8 +50,10 @@ Perguntas boas para demonstrar:
 - "Qual a cotação do dólar agora?" → "não tenho essa informação no material disponível".
 
 ## Notas
-- Banco vetorial `SimpleVectorStore` (em memória) de propósito, para rodar com um comando.
-  Evolução natural: **pgvector** (o projeto já usa Postgres em produção).
+- **Recuperação léxica** (sobreposição de termos) de propósito: a base é pequena e curada,
+  então um banco vetorial seria over-engineering — e o tier gratuito do Gemini só oferece o
+  modelo de chat, não o de embeddings. A evolução natural, quando a base crescer, é
+  **embeddings + pgvector** (o projeto já usa Postgres em produção), sem tocar na porta.
 - Spring AI evolui rápido; se algum método divergir da versão usada, veja
   `spring.ai.google.genai.*` na doc do Spring AI 2.0.
 

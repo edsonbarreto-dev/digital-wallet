@@ -2,10 +2,8 @@ package br.com.digital.wallet.infrastructure.ai;
 
 import br.com.digital.wallet.application.AssistantAnswer;
 import br.com.digital.wallet.application.FinancialAssistant;
+import br.com.digital.wallet.infrastructure.ai.FinancialKnowledgeBase.Trecho;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.document.Document;
-import org.springframework.ai.vectorstore.SearchRequest;
-import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,7 +13,7 @@ import java.util.stream.Collectors;
  * Adaptador da porta {@link FinancialAssistant} usando Spring AI + Gemini, com RAG.
  *
  * Fluxo explícito (mostra domínio da mecânica, não só a "mágica"):
- *   1. Recupera os trechos mais relevantes da base de educação financeira.
+ *   1. Recupera da base os trechos mais relevantes para a pergunta (recuperação léxica).
  *   2. Monta um contexto só com esses trechos.
  *   3. Pede ao modelo que responda USANDO SÓ o contexto, com dois guardrails:
  *      não inventar e NUNCA recomendar investimento (apenas educar).
@@ -37,20 +35,19 @@ class SpringAiFinancialAssistant implements FinancialAssistant {
             """;
 
     private final ChatClient chatClient;
-    private final VectorStore vectorStore;
+    private final FinancialKnowledgeBase base;
 
-    SpringAiFinancialAssistant(ChatClient.Builder builder, VectorStore vectorStore) {
+    SpringAiFinancialAssistant(ChatClient.Builder builder, FinancialKnowledgeBase base) {
         this.chatClient = builder.build();
-        this.vectorStore = vectorStore;
+        this.base = base;
     }
 
     @Override
     public AssistantAnswer ask(String question) {
-        List<Document> trechos = vectorStore.similaritySearch(
-                SearchRequest.builder().query(question).topK(4).build());
+        List<Trecho> trechos = base.buscar(question, 4);
 
         String contexto = trechos.stream()
-                .map(d -> "[" + fonte(d) + "]\n" + d.getText())
+                .map(t -> "[" + t.fonte() + "]\n" + t.texto())
                 .collect(Collectors.joining("\n\n---\n\n"));
 
         String resposta = chatClient.prompt()
@@ -67,14 +64,10 @@ class SpringAiFinancialAssistant implements FinancialAssistant {
                 .content();
 
         List<String> fontes = trechos.stream()
-                .map(SpringAiFinancialAssistant::fonte)
+                .map(Trecho::fonte)
                 .distinct()
                 .toList();
 
         return new AssistantAnswer(resposta, fontes);
-    }
-
-    private static String fonte(Document d) {
-        return String.valueOf(d.getMetadata().getOrDefault("fonte", "desconhecida"));
     }
 }

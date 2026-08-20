@@ -19,7 +19,10 @@ import static org.assertj.core.api.Assertions.*;
   "spring.datasource.username=sa",
   "spring.datasource.password=",
   "spring.datasource.driver-class-name=org.h2.Driver",
-  "spring.jpa.hibernate.ddl-auto=create-drop"
+  "spring.jpa.hibernate.ddl-auto=create-drop",
+  // chave fake só para o ChatClient da IA construir no contexto de teste
+  // (este teste é de persistência e nunca chama a IA, então não há rede).
+  "spring.ai.google.genai.api-key=test-dummy-key"
 })
 class AccountPersistenceAdapterTest {
 
