@@ -1,6 +1,7 @@
 package br.com.digital.wallet.infrastructure.web;
 
 import br.com.digital.wallet.application.DepositService;
+import br.com.digital.wallet.application.IdempotencyRegistry;
 import br.com.digital.wallet.application.OpenAccountService;
 import br.com.digital.wallet.domain.Account;
 import br.com.digital.wallet.domain.Money;
@@ -31,6 +32,9 @@ class AccountControllerTest {
 
   @MockitoBean
   private DepositService deposit;
+
+  @MockitoBean
+  private IdempotencyRegistry idempotency;
 
   @Test
   void post_accounts_cria_conta_retorna_201_com_location_e_corpo() throws Exception {
