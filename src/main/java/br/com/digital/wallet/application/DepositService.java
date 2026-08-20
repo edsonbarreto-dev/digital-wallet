@@ -1,0 +1,26 @@
+package br.com.digital.wallet.application;
+
+import br.com.digital.wallet.domain.Account;
+import br.com.digital.wallet.domain.Money;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+
+/**
+ * Caso de uso: depositar em uma conta. Carrega o agregado pela porta, aplica a regra de
+ * domínio (Account.deposit) e persiste. A invariante de valor positivo mora no domínio.
+ */
+public class DepositService {
+
+  private final AccountRepository accounts;
+
+  public DepositService(AccountRepository accounts) {
+    this.accounts = accounts;
+  }
+
+  public Account deposit(UUID accountId, BigDecimal amount) {
+    Account account = accounts.findById(accountId).orElseThrow();
+    account.deposit(Money.of(amount));
+    return accounts.save(account);
+  }
+}
