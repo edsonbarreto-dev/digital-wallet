@@ -1,4 +1,4 @@
-# Tesouro Direto e CDB
+﻿# Tesouro Direto e CDB
 
 ## Tesouro Direto
 Programa de compra de **títulos públicos** federais por pessoas físicas. É considerado o

@@ -1,4 +1,4 @@
-# Diversificação
+﻿# Diversificação
 
 ## O que é
 Diversificar é **distribuir os investimentos** entre diferentes ativos, setores e prazos,

@@ -17,7 +17,7 @@ class AssistantController {
         this.service = service;
     }
 
-    @PostMapping("/perguntar")
+    @PostMapping(value = "/perguntar", produces = "application/json;charset=UTF-8")
     AssistantAnswer perguntar(@RequestBody Ask request) {
         return service.ask(request.pergunta());
     }

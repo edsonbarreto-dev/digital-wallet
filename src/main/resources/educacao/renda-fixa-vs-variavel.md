@@ -1,4 +1,4 @@
-# Renda Fixa x Renda Variável
+﻿# Renda Fixa x Renda Variável
 
 ## Renda fixa
 Investimentos em que as regras de remuneração são conhecidas no momento da aplicação.
